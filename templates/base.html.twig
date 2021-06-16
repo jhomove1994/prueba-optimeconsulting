@@ -1,0 +1,31 @@
+{% set route_name = app.request.attributes.get('_route') %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        {# Run `composer require symfony/webpack-encore-bundle`
+           and uncomment the following Encore helpers to start using Symfony UX #}
+        {% block stylesheets %}
+            <link rel="stylesheet" href="{{ asset('assets/css/global.css')}}">
+        {% endblock %}
+
+        {% block javascripts %}
+            <script src="{{ asset('assets/js/jquery.js') }}"></script>
+            <script src="{{ asset('assets/js/bootstrap.js') }}"></script>
+        {% endblock %}
+    </head>
+    <body class="container-fluid m-4">
+        {% block header%}
+        <ul class="nav nav-pills">
+            <li class="nav-item">
+                <a {% if route_name matches '{^category}' %} class="nav-link active" {% else %} class="nav-link" {% endif %} href="{{ path('category.index') }}">Categorias</a>
+            </li>
+            <li class="nav-item">
+                <a {% if route_name matches '{^products}' %} class="nav-link active" {% else %} class="nav-link" {% endif %} href="{{ path('product.index') }}">Productos</a>
+            </li>
+        </ul>
+        {% endblock %}
+        {% block body %}{% endblock %}
+    </body>
+</html>

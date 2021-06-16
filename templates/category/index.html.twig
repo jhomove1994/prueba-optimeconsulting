@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello CategoryController!{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div class="container">
+    {% for message in app.flashes('Success') %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+    {% endfor %}
+    {% for message in app.flashes('Error') %}
+        <div class="alert alert-warning">
+            {{ message }}
+        </div>
+    {% endfor %}
+    <div class="d-flex flex-row-reverse">
+        <a href="{{ path('category.create') }}" type="button" class="btn btn-primary w-25 mt-4 mb-4">Add</a>
+    </div>
+    <table class="table">
+        <thead class="table-dark">
+            <tr>
+                {# sorting of properties based on query components #}
+                <th scope="col">{{ knp_pagination_sortable(categories, 'Id', 'a.id') }}</th>
+                <th scope="col" {% if categories.isSorted('a.name') %} class="sorted"{% endif %}>
+                    {{ knp_pagination_sortable(categories, 'Name', 'a.name') }}
+                </th>
+                <th scope="col" {% if categories.isSorted('a.active') %} class="sorted"{% endif %}>
+                    {{ knp_pagination_sortable(categories, 'Estado', 'a.active') }}
+                </th>
+                <th scope="col" {% if categories.isSorted(['a.createdAt']) %} class="sorted"{% endif %}>
+                    {{ knp_pagination_sortable(categories, 'Created At', ['a.createdAt']) }}
+                </th>
+                <th scope="col">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {# table body #}
+            {% for category in categories %}
+                <tr {% if loop.index is odd %}class="color"{% endif %}>
+                    <td>{{ category.id }}</td>
+                    <td>{{ category.name }}</td>
+                    <td>{{ category.active }}</td>
+                    <td>{{ category.createdAt | date('Y-m-d') }}</td>
+                    <td>
+                        <a href="{{ path('category.edit', {'id': category.id })}}" type="button" class="btn btn-primary">Edit</a>
+                        <a id="delete-element-category" data-id="{{category.id}}" data-resource="category" href="{{ path('category.delete', {'id': category.id })}}" type="button" class="btn btn-danger">Delete</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {# display navigation #}
+    <div class="navigation">
+        {{ knp_pagination_render(categories) }}
+    </div>
+</div>
+<script src="{{ asset('assets/js/list.js') }}"></script>
+{% endblock %}

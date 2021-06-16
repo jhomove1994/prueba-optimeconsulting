@@ -1,0 +1,81 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Productos!{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div class="container">
+    {% for message in app.flashes('Success') %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+    {% endfor %}
+    {% for message in app.flashes('Error') %}
+        <div class="alert alert-warning">
+            {{ message }}
+        </div>
+    {% endfor %}
+    <div class="d-flex flex-row-reverse">
+        <a href="{{ path('product.create') }}" type="button" class="btn btn-primary w-25 mt-4 mb-4">Add</a>
+        <a href="{{ path('product.export') }}" type="button" class="btn btn-secondary w-25 mt-4 mb-4">Download</a>
+    </div>
+    <table class="table">
+        <thead class="table-dark">
+            <tr>
+                {# sorting of properties based on query components #}
+                <th scope="col">{{ knp_pagination_sortable(products, 'Id', 'a.id') }}</th>
+                <th scope="col" {% if products.isSorted('a.code') %} class="sorted"{% endif %}>
+                    {{ knp_pagination_sortable(products, 'Code', 'a.code') }}
+                </th>
+                <th scope="col" {% if products.isSorted('a.name') %} class="sorted"{% endif %}>
+                    {{ knp_pagination_sortable(products, 'Name', 'a.name') }}
+                </th>
+                <th scope="col">
+                    Description
+                </th>
+                <th scope="col" {% if products.isSorted('a.brand') %} class="sorted"{% endif %}>
+                    {{ knp_pagination_sortable(products, 'Brand', 'a.brand') }}
+                </th>
+                <th scope="col" {% if products.isSorted('a.category') %} class="sorted"{% endif %}>
+                    {{ knp_pagination_sortable(products, 'Category', 'a.category') }}
+                </th>
+                <th scope="col" {% if products.isSorted('a.price') %} class="sorted"{% endif %}>
+                    {{ knp_pagination_sortable(products, 'Price', 'a.price') }}
+                </th>
+                <th scope="col" {% if products.isSorted(['a.createdAt']) %} class="sorted"{% endif %}>
+                    {{ knp_pagination_sortable(products, 'Created At', ['a.createdAt']) }}
+                </th>
+                <th scope="col">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {# table body #}
+            {% for product in products %}
+                <tr {% if loop.index is odd %}class="color"{% endif %}>
+                    <td>{{ product.id }}</td>
+                    <td>{{ product.code }}</td>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.description }}</td>
+                    <td>{{ product.brand }}</td>
+                    <td>{{ product.category_name }}</td>
+                    <td>{{ product.price }}</td>
+                    <td>{{ product.createdAt | date('Y-m-d') }}</td>
+                    <td>
+                        <a href="{{ path('product.edit', {'id': product.id })}}" type="button" class="btn btn-primary">Edit</a>
+                        <a id="delete-element-product" data-id="{{product.id}}" data-resource="product" href="{{ path('product.delete', {'id': product.id })}}" type="button" class="btn btn-danger">Delete</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {# display navigation #}
+    <div class="navigation">
+        {{ knp_pagination_render(products) }}
+    </div>
+</div>
+<script src="{{ asset('assets/js/list.js') }}"></script>
+{% endblock %}
